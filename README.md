@@ -11,7 +11,7 @@ Add the following libraries (using gradle for example)
 Clone this Repository into your project repo and run the tests using gradle
 
 ### Important!
-* If your Main class is not called Main, you need to change the name in `java/base/Start.java$game`
+* If your Main class is not called Main, you need to change the name in `java/base/Start.java$start`
 #### I cannot guarantee that the tests are fully correct.  
 
 ### !!Over 100 Tests!!
