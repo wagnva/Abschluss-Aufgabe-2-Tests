@@ -96,6 +96,206 @@ class MedalTableTest {
     }
 
     @Test
+    public void testSortingByGoldMedals() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-ioc-code 119;ita;italien;1992")
+                .willReturn("add-ioc-code 001;spa;spanien;1992")
+                .willReturn("add-ioc-code 005;usa;usa;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("add-athlete 0001;ger;mustermann;germany;bob;bob")
+                .willReturn("add-athlete 0002;ita;mustermann;italien;bob;bob")
+                .willReturn("add-athlete 0003;spa;mustermann;spanien;bob;bob")
+                .willReturn("add-athlete 0004;usa;mustermann;usa;bob;bob")
+                .willReturn("add-competition 0001;2018;germany;bob;bob;1;0;0")
+                .willReturn("add-competition 0002;2018;italien;bob;bob;1;0;0")
+                .willReturn("add-competition 0003;2018;spanien;bob;bob;1;0;0")
+                .willReturn("add-competition 0004;2018;usa;bob;bob;1;0;0")
+                .willReturn("add-competition 0004;2010;usa;bob;bob;1;0;0")
+                .willReturn("add-competition 0001;2014;germany;bob;bob;1;0;0")
+                .willReturn("add-competition 0001;2010;germany;bob;bob;1;0;0")
+                .willReturn("olympic-medal-table")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+
+        System.out.println(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")));
+
+        for(int i = 0; i < 16; i++){
+            assertThat(terminalMock.getResult().getResults().get(0)).isEqualTo("OK");
+            terminalMock.getResult().getResults().remove(0);
+        }
+
+        assertThat(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")))
+                .isEqualTo(
+                        "(1,118,ger,germany,3,0,0,3)\n" +
+                                "(2,005,usa,usa,2,0,0,2)\n" +
+                                "(3,001,spa,spanien,1,0,0,1)\n" +
+                                "(4,119,ita,italien,1,0,0,1)");
+    }
+
+    @Test
+    public void testSortingBySilverMedals() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-ioc-code 119;ita;italien;1992")
+                .willReturn("add-ioc-code 001;spa;spanien;1992")
+                .willReturn("add-ioc-code 005;usa;usa;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("add-athlete 0001;ger;mustermann;germany;bob;bob")
+                .willReturn("add-athlete 0002;ita;mustermann;italien;bob;bob")
+                .willReturn("add-athlete 0003;spa;mustermann;spanien;bob;bob")
+                .willReturn("add-athlete 0004;usa;mustermann;usa;bob;bob")
+                .willReturn("add-competition 0001;2018;germany;bob;bob;0;1;0")
+                .willReturn("add-competition 0002;2018;italien;bob;bob;0;1;0")
+                .willReturn("add-competition 0003;2018;spanien;bob;bob;0;1;0")
+                .willReturn("add-competition 0004;2018;usa;bob;bob;0;1;0")
+                .willReturn("add-competition 0004;2010;usa;bob;bob;0;1;0")
+                .willReturn("add-competition 0001;2014;germany;bob;bob;0;1;0")
+                .willReturn("add-competition 0001;2010;germany;bob;bob;0;1;0")
+                .willReturn("olympic-medal-table")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+
+        System.out.println(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")));
+
+        for(int i = 0; i < 16; i++){
+            assertThat(terminalMock.getResult().getResults().get(0)).isEqualTo("OK");
+            terminalMock.getResult().getResults().remove(0);
+        }
+
+        assertThat(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")))
+                .isEqualTo(
+                        "(1,118,ger,germany,0,3,0,3)\n" +
+                                "(2,005,usa,usa,0,2,0,2)\n" +
+                                "(3,001,spa,spanien,0,1,0,1)\n" +
+                                "(4,119,ita,italien,0,1,0,1)");
+    }
+
+    @Test
+    public void testSortingByBronzeMedals() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-ioc-code 119;ita;italien;1992")
+                .willReturn("add-ioc-code 001;spa;spanien;1992")
+                .willReturn("add-ioc-code 005;usa;usa;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("add-athlete 0001;ger;mustermann;germany;bob;bob")
+                .willReturn("add-athlete 0002;ita;mustermann;italien;bob;bob")
+                .willReturn("add-athlete 0003;spa;mustermann;spanien;bob;bob")
+                .willReturn("add-athlete 0004;usa;mustermann;usa;bob;bob")
+                .willReturn("add-competition 0001;2018;germany;bob;bob;0;0;1")
+                .willReturn("add-competition 0002;2018;italien;bob;bob;0;0;1")
+                .willReturn("add-competition 0003;2018;spanien;bob;bob;0;0;1")
+                .willReturn("add-competition 0004;2018;usa;bob;bob;0;0;1")
+                .willReturn("add-competition 0004;2010;usa;bob;bob;0;0;1")
+                .willReturn("add-competition 0001;2014;germany;bob;bob;0;0;1")
+                .willReturn("add-competition 0001;2010;germany;bob;bob;0;0;1")
+                .willReturn("olympic-medal-table")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+
+        System.out.println(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")));
+
+        for(int i = 0; i < 16; i++){
+            assertThat(terminalMock.getResult().getResults().get(0)).isEqualTo("OK");
+            terminalMock.getResult().getResults().remove(0);
+        }
+
+        assertThat(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")))
+                .isEqualTo(
+                        "(1,118,ger,germany,0,0,3,3)\n" +
+                                "(2,005,usa,usa,0,0,2,2)\n" +
+                                "(3,001,spa,spanien,0,0,1,1)\n" +
+                                "(4,119,ita,italien,0,0,1,1)");
+    }
+
+    @Test
+    public void testSomeSorting() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-ioc-code 119;ita;italien;1992")
+                .willReturn("add-ioc-code 001;spa;spanien;1992")
+                .willReturn("add-ioc-code 005;usa;usa;1992")
+                .willReturn("add-ioc-code 006;fra;frankreich;1992")
+                .willReturn("add-ioc-code 008;pol;polen;1992")
+                .willReturn("add-ioc-code 007;eng;england;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("add-athlete 0001;ger;mustermann;germany;bob;bob")
+                .willReturn("add-athlete 0007;fra;mustermann;frankreich;bob;bob")
+                .willReturn("add-athlete 0002;ita;mustermann;italien;bob;bob")
+                .willReturn("add-athlete 0003;spa;mustermann;spanien;bob;bob")
+                .willReturn("add-athlete 0004;usa;mustermann;usa;bob;bob")
+                .willReturn("add-athlete 0006;pol;mustermann;polen;bob;bob")
+                .willReturn("add-athlete 0005;eng;mustermann;england;bob;bob")
+                .willReturn("add-competition 0001;2018;germany;bob;bob;1;0;0")
+                .willReturn("add-competition 0002;2018;italien;bob;bob;0;0;1")
+                .willReturn("add-competition 0003;2018;spanien;bob;bob;0;0;1")
+                .willReturn("add-competition 0004;2018;usa;bob;bob;0;0;1")
+                .willReturn("add-competition 0005;2018;england;bob;bob;0;0;1")
+                .willReturn("add-competition 0006;2018;polen;bob;bob;0;0;1")
+                .willReturn("add-competition 0007;2018;frankreich;bob;bob;0;0;1")
+                .willReturn("add-competition 0001;2014;germany;bob;bob;1;0;0")
+                .willReturn("add-competition 0004;2014;usa;bob;bob;0;0;1")
+                .willReturn("add-competition 0007;2014;frankreich;bob;bob;0;1;0")
+                .willReturn("add-competition 0002;2014;italien;bob;bob;1;0;0")
+                .willReturn("add-competition 0003;2014;spanien;bob;bob;1;0;0")
+                .willReturn("add-competition 0001;2010;germany;bob;bob;1;0;0")
+                .willReturn("add-competition 0004;2010;usa;bob;bob;1;0;0")
+                .willReturn("add-competition 0007;2010;frankreich;bob;bob;0;1;0")
+                .willReturn("add-competition 0003;2010;spanien;bob;bob;1;0;0")
+                .willReturn("add-competition 0004;2006;usa;bob;bob;1;0;0")
+                .willReturn("add-competition 0007;2006;frankreich;bob;bob;1;0;0")
+                .willReturn("olympic-medal-table")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+
+        System.out.println(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")));
+
+        for(int i = 0; i < 33; i++){
+            assertThat(terminalMock.getResult().getResults().get(0)).isEqualTo("OK");
+            terminalMock.getResult().getResults().remove(0);
+        }
+
+        assertThat(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")))
+                .isEqualTo(
+                        "(1,118,ger,germany,3,0,0,3)\n" +
+                                "(2,005,usa,usa,2,0,2,4)\n" +
+                                "(3,001,spa,spanien,2,0,1,3)\n" +
+                                "(4,006,fra,frankreich,1,2,1,4)\n" +
+                                "(5,119,ita,italien,1,0,1,2)\n" +
+                                "(6,007,eng,england,0,0,1,1)\n" +
+                                "(7,008,pol,polen,0,0,1,1)");
+    }
+
+    @Test
     public void testNoOutputWhenNoContestants() throws Exception{
         terminalMock.mock(true)
                 .willReturn("olympic-medal-table")
@@ -107,5 +307,25 @@ class MedalTableTest {
         assertThat(terminalMock.getResult().getLast()).isNull();
     }
 
+    @Test
+    public void testOnlyWorkWhenLoggedIn() throws Exception{
+        terminalMock.mock(false)
+                .willReturn("olympic-medal-table")
+                .willReturn("quit");
 
+        start();
+
+        assertThat(terminalMock.isError()).isTrue();
+    }
+
+    @Test
+    public void testExtraSpace() throws Exception{
+        terminalMock.mock(true)
+                .willReturn("olympic-medal-table ")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isTrue();
+    }
 }

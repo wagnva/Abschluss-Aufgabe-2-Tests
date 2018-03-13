@@ -56,6 +56,22 @@ class ListSportsVenuesTest {
     }
 
     @Test
+    public void testEmpty() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 001;ger;Deutschland;1992")
+                .willReturn("list-sports-venues Deutschland")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+        assertThat(terminalMock.getResult().getResults())
+                .containsExactlyElementsIn(new String[]{
+                        "OK"
+                });
+    }
+
+    @Test
     public void testSpecialCharsAndNumbersAllowed() throws Exception {
         terminalMock.mock(true)
                 .willReturn("add-ioc-code 001;ger;Deutschland56&%$#;1992")

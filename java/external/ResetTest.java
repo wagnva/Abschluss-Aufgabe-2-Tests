@@ -1,17 +1,13 @@
 package external;
 
-import static org.junit.Assert.*;
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assertWithMessage;
 import static base.Start.start;
 
 import base.TerminalMock;
-import edu.kit.informatik.Main;
 import edu.kit.informatik.Terminal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -90,6 +86,7 @@ class ResetTest {
     @Test
     public void testNoCountriesExistAnymore() throws Exception {
         terminalMock.mock(true)
+                .willReturn("add-ioc-code 111;arg;argentinien;1920")
                 .willReturn("reset")
                 .willReturn("list-ioc-codes")
                 .willReturn("quit");
@@ -99,13 +96,14 @@ class ResetTest {
         assertThat(terminalMock.isError()).isFalse();
         assertThat(terminalMock.getResult().getResults())
                 .containsExactlyElementsIn(new String[]{
-                        "OK"
+                        "OK", "OK"
                 });
     }
 
     @Test
     public void testNoSportsExistAnymore() throws Exception {
         terminalMock.mock(true)
+                .willReturn("add-olympic-sport curling;curling")
                 .willReturn("reset")
                 .willReturn("list-olympic-sports")
                 .willReturn("quit");
@@ -115,13 +113,14 @@ class ResetTest {
         assertThat(terminalMock.isError()).isFalse();
         assertThat(terminalMock.getResult().getResults())
                 .containsExactlyElementsIn(new String[]{
-                        "OK"
+                        "OK", "OK"
                 });
     }
 
     @Test
     public void testOlympicMedalTableEmpty() throws Exception {
         terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
                 .willReturn("reset")
                 .willReturn("olympic-medal-table")
                 .willReturn("quit");
@@ -131,10 +130,48 @@ class ResetTest {
         assertThat(terminalMock.isError()).isFalse();
         assertThat(terminalMock.getResult().getResults())
                 .containsExactlyElementsIn(new String[]{
-                        "OK"
+                        "OK", "OK"
                 });
     }
 
-    //todo add more tests
+    @Test
+    public void testNoSportVenuesExistAnymore() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 001;ger;Deutschland;1992")
+                .willReturn("add-sports-venue 001;Deutschland;Karlsruhe;Name;2000;500")
+                .willReturn("reset")
+                .willReturn("add-ioc-code 001;ger;Deutschland;1992")
+                .willReturn("list-sports-venues Deutschland")
+                .willReturn("quit");
 
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+        assertThat(terminalMock.getResult().getResults())
+                .containsExactlyElementsIn(new String[]{
+                        "OK", "OK", "OK", "OK"
+                });
+    }
+
+    @Test
+    public void testNoAthletesExistAnymore() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("add-athlete 0001;max;mustermann;germany;bob;bob")
+                .willReturn("reset")
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("summary-athletes bob;bob")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+        assertThat(terminalMock.getResult().getResults())
+                .containsExactlyElementsIn(new String[]{
+                        "OK", "OK", "OK", "OK", "OK", "OK"
+                });
+    }
 }
+

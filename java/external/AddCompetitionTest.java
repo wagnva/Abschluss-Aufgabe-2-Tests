@@ -358,14 +358,14 @@ class AddCompetitionTest {
     }
 
     @Test
-    public void testTwoGoldMedalsInTheSameYearError() throws Exception {
+    public void testTwoGoldMedalsInTheSameYearSameAthleteError() throws Exception {
         terminalMock.mock(true)
                 .willReturn("add-ioc-code 118;ger;Deutschland;1992")
                 .willReturn("add-olympic-sport eishockey;eishockey")
                 .willReturn("add-athlete 0001;Max;Mustermann;Deutschland;eishockey;eishockey")
                 .willReturn("add-athlete 0002;Max;Mustermann;Deutschland;eishockey;eishockey")
                 .willReturn("add-competition 0001;2018;Deutschland;eishockey;eishockey;1;0;0")
-                .willReturn("add-competition 0002;2018;Deutschland;eishockey;eishockey;1;0;0")
+                .willReturn("add-competition 0001;2018;Deutschland;eishockey;eishockey;1;0;0")
                 .willReturn("quit");
 
         start();

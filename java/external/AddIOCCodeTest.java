@@ -96,7 +96,7 @@ class AddIOCCodeTest {
     @Test
     public void testWithIOCCodeUppercase() throws Exception {
         terminalMock.mock(true)
-                .willReturn("add-ioc-code 001;Ger;Deutschland;1992") //uppercase not allowed
+                .willReturn("add-ioc-code 001;Ger;deutschland;1992") //uppercase not allowed
                 .willReturn("quit");
 
         start();
@@ -107,7 +107,18 @@ class AddIOCCodeTest {
     @Test
     public void testWithIOCCodeTooLong() throws Exception {
         terminalMock.mock(true)
-                .willReturn("add-ioc-code 001;germ;Deutschland;1992") //ioc code only 3 chars allowed
+                .willReturn("add-ioc-code 001;germ;deutschland;1992") //ioc code only 3 chars allowed
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isTrue();
+    }
+
+    @Test
+    public void testWithIOCCodeTooShort() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 001;ge;deutschland;1992") //ioc code only 3 chars allowed
                 .willReturn("quit");
 
         start();
@@ -129,7 +140,7 @@ class AddIOCCodeTest {
     @Test
     public void testTooLongYear() throws Exception {
         terminalMock.mock(true)
-                .willReturn("add-ioc-code 001;ger;Deutschland;19922") //too long year
+                .willReturn("add-ioc-code 001;ger;deutschland;19922") //too long year
                 .willReturn("quit");
 
         start();
@@ -164,8 +175,8 @@ class AddIOCCodeTest {
     @Test
     public void testTwoCountriesWithSameName() throws Exception {
         terminalMock.mock(true)
-                .willReturn("add-ioc-code 001;ger;Deutschland;1992")
-                .willReturn("add-ioc-code 002;fra;Deutschland;1995")
+                .willReturn("add-ioc-code 001;ger;deutschland;1992")
+                .willReturn("add-ioc-code 002;fra;deutschland;1995")
                 .willReturn("quit");
 
         start();

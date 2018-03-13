@@ -79,6 +79,18 @@ class ListIOCCodesTest {
     }
 
     @Test
+    public void testEmpty() throws Exception{
+        terminalMock.mock(true)
+                .willReturn("list-ioc-codes")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+        assertThat(terminalMock.getResult().getLast()).isNull();
+    }
+
+    @Test
     public void testWithArgsError() throws Exception{
         terminalMock.mock(true)
                 .willReturn("list-ioc-codes ")
