@@ -93,6 +93,26 @@ class AddAthleteTest {
     }
 
     @Test
+    public void testTwoDifferetDisciplinesWork() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;Deutschland;1992")
+                .willReturn("add-olympic-sport eishockey;eishockey")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("add-athlete 0001;Max;Mustermann;Deutschland;eishockey;eishockey")
+                .willReturn("add-athlete 0001;Max;Mustermann;Deutschland;bob;bob")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+
+        for(int i = 0; i < terminalMock.getResult().getResults().size(); i++){
+            assertThat(terminalMock.getResult().getResults().get(i)).isEqualTo("OK");
+        }
+
+    }
+
+    @Test
     public void testOnlyWorksWhenLoggedIn() throws Exception {
         terminalMock.mock(true)
                 .willReturn("add-ioc-code 118;ger;Deutschland;1992")
@@ -124,6 +144,24 @@ class AddAthleteTest {
         assertThat(terminalMock.isError()).isTrue();
 
         for(int i = 0; i < 2; i++){
+            assertThat(terminalMock.getResult().getResults().get(i)).isEqualTo("OK");
+        }
+    }
+
+    @Test
+    public void testSameID() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;Deutschland;1992")
+                .willReturn("add-olympic-sport eishockey;eishockey")
+                .willReturn("add-athlete 0001;Max;Mustermann;Deutschland;eishockey;eishockey")
+                .willReturn("add-athlete 0001;hans;peter;usa;eishockey;eishockey2")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isTrue();
+
+        for(int i = 0; i < 3; i++){
             assertThat(terminalMock.getResult().getResults().get(i)).isEqualTo("OK");
         }
     }

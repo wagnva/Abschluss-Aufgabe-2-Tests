@@ -118,6 +118,19 @@ class AdminTest {
     }
 
     @Test
+    public void testCreateAdminWithSameNameButDifferentUsername() throws Exception {
+        terminalMock.mock()
+                .willReturn("add-admin hans;maier;hans;hahahaha") //should work
+                .willReturn("add-admin hans;maier;hansi;hahahaha") //should work
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+        assertThat(terminalMock.getResult().getLast()).isEqualTo("OK");
+    }
+
+    @Test
     public void testCreateAdminMissingArgs() throws Exception {
         terminalMock.mock()
                 .willReturn("add-admin hans;;hans;hahahaha") //missing last name
@@ -214,7 +227,7 @@ class AdminTest {
     @Test
     public void testCreateAdminWhileAlreadyLoggedIn() throws Exception {
         terminalMock.mock(true)
-                .willReturn("create-admin Hans2;Maier;hans2;password123") //already logged in
+                .willReturn("create-admin hans2;maier;hans2;password123") //already logged in
                 .willReturn("quit");
 
         start();

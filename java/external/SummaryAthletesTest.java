@@ -51,9 +51,10 @@ class SummaryAthletesTest {
                 .willReturn("add-competition 0001;2010;Deutschland;eishockey;eishockey;1;0;0")
                 .willReturn("add-competition 0003;2018;Deutschland;eishockey;eishockey;0;0;1")
                 .willReturn("add-competition 0003;2014;Deutschland;eishockey;eishockey;0;0;1")
+                .willReturn("add-competition 0003;2010;Deutschland;eishockey;eishockey;1;0;0")
                 .willReturn("add-competition 0002;2018;Deutschland;eishockey;eishockey;0;1;0")
                 .willReturn("add-competition 0002;2014;Deutschland;eishockey;eishockey;0;1;0")
-                .willReturn("summary-athletes eishockey")
+                .willReturn("summary-athletes eishockey;eishockey")
                 .willReturn("quit");
 
         start();
@@ -75,9 +76,10 @@ class SummaryAthletesTest {
                         "OK\n" +
                         "OK\n" +
                         "OK\n" +
+                        "OK\n" +
                         "0001 Max Mustermann 3\n" +
-                        "0002 Hans Mustermann 2\n" +
-                        "0003 Dieter Mustermann 2");
+                        "0003 Dieter Mustermann 3\n" +
+                        "0002 Hans Mustermann 2");
     }
 
     @Test
@@ -87,7 +89,7 @@ class SummaryAthletesTest {
                 .willReturn("add-olympic-sport eishockey57$&#;eishockey57$&#")
                 .willReturn("add-athlete 0001;Max;Mustermann;Deutschland;eishockey57$&#;eishockey57$&#")
                 .willReturn("add-competition 0001;2014;Deutschland;eishockey57$&#;eishockey57$&#;0;1;0")
-                .willReturn("summary-athletes eishockey57$&#")
+                .willReturn("summary-athletes eishockey57$&#;eishockey57$&#")
                 .willReturn("quit");
 
         start();
@@ -106,9 +108,49 @@ class SummaryAthletesTest {
     }
 
     @Test
+    public void testWithoutCompetition() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("add-athlete 0001;max;mustermann;germany;bob;bob")
+                .willReturn("summary-athletes bob;bob")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+
+        assertThat(terminalMock.getResult().getResults()
+                .stream()
+                .collect(Collectors.joining("\n")))
+                .isEqualTo("OK\n" +
+                        "OK\n" +
+                        "OK\n" +
+                        "0001 max mustermann 0"
+                );
+    }
+
+    @Test
+    public void testEmpty() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 118;ger;germany;1992")
+                .willReturn("add-olympic-sport bob;bob")
+                .willReturn("summary-athletes bob;bob")
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+        assertThat(terminalMock.getResult().getResults())
+                .containsExactlyElementsIn(new String[]{
+                        "OK", "OK"
+                });
+    }
+
+    @Test
     public void testErrorWhenDisciplineDoesntExist() throws Exception{
         terminalMock.mock(true)
-                .willReturn("summary-athletes eishockey")
+                .willReturn("summary-athletes eishockey;eishockey")
                 .willReturn("quit");
 
         start();
@@ -146,7 +188,7 @@ class SummaryAthletesTest {
                 .willReturn("add-ioc-code 118;ger;Deutschland;1992")
                 .willReturn("add-olympic-sport eishockey;eishockey")
                 .willReturn("add-athlete 0001;Max;Mustermann;Deutschland;eishockey;eishockey")
-                .willReturn("summary-athletes eishockey ")
+                .willReturn("summary-athletes eishockey;eishockey ")
                 .willReturn("quit");
 
         start();

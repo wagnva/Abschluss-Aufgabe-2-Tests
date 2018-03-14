@@ -131,4 +131,29 @@ class AddSportsVenueTest {
 
         assertThat(terminalMock.isError()).isTrue();
     }
+
+    @Test
+    public void testsNegativeYear() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 001;ger;Deutschland;1992")
+                .willReturn("add-sports-venue 001;Deutschland;Karlsruhe;Name;-1000;500") //negative seat number
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isTrue();
+    }
+
+    @Test
+    public void testFewDifferentArgsShouldWork() throws Exception {
+        terminalMock.mock(true)
+                .willReturn("add-ioc-code 001;ger;deut schland!;1992")
+                .willReturn("add-sports-venue 999;deut schland!;karlsruhe;na&me;1000;500") //negative seat number
+                .willReturn("quit");
+
+        start();
+
+        assertThat(terminalMock.isError()).isFalse();
+        assertThat(terminalMock.getResult().getLast()).isEqualTo("OK");
+    }
 }
